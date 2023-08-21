@@ -22,4 +22,9 @@ return {
 		event = "InsertEnter",
 		opts = {} -- this is equalent to setup({}) function
 	},
+	{
+		"christoomey/vim-tmux-navigator",
+		lazy = false,
+
+	},
 }
