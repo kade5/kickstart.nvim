@@ -31,4 +31,5 @@ return {
 			"nvim-tree/nvim-web-devicons",
 		},
 	},
+	"andymass/vim-matchup",
 }
