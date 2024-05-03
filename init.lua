@@ -454,11 +454,7 @@ local servers = {
   -- clangd = {},
   gopls = {},
   pyright = {},
-  ocamllsp = {
-    get_language_id = function(_, ftype)
-      return ftype
-    end,
-  },
+  ocamllsp = {},
   -- rust_analyzer = {},
   -- tsserver = {},
 
