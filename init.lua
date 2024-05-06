@@ -686,11 +686,14 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
       {
         'MattiasMTS/cmp-dbee',
-        commit = '0feabc1',
         dependencies = {
           { 'kndndrj/nvim-dbee' },
         },
         ft = 'sql', -- optional but good to have
+        opts = {},
+        config = function()
+          require('cmp-dbee').setup {}
+        end,
       },
     },
     config = function()
