@@ -10,7 +10,13 @@ return {
     require('dbee').install()
   end,
   config = function()
-    require('dbee').setup(--[[optional config]])
+    require('dbee').setup {
+      extra_helpers = {
+        ['mssql'] = {
+          ['Top 100'] = 'SELECT TOP 100 * FROM {{ .Schema}}.{{ .Table}}',
+        },
+      },
+    }
   end,
   keys = {
     {
