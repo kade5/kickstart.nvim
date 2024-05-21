@@ -684,6 +684,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
       {
         'MattiasMTS/cmp-dbee',
         dependencies = {
@@ -767,6 +768,20 @@ require('lazy').setup({
           { name = 'luasnip' },
           { name = 'path' },
           { name = 'cmp-dbee' },
+          {
+            name = 'buffer',
+            option = {
+              --Ignore files over max size
+              get_bufnrs = function()
+                local buf = vim.api.nvim_get_current_buf()
+                local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+                if byte_size > 10 * 1024 * 1024 then -- 10 Megabyte max
+                  return {}
+                end
+                return { buf }
+              end,
+            },
+          },
         },
       }
     end,
