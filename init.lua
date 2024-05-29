@@ -688,7 +688,7 @@ require('lazy').setup({
       {
         'MattiasMTS/cmp-dbee',
         dependencies = {
-          { 'kndndrj/nvim-dbee' },
+          { 'kade5/nvim-dbee' },
         },
         ft = 'sql', -- optional but good to have
         opts = {},
