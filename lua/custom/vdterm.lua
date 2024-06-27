@@ -1,5 +1,7 @@
 local Terminal = require('toggleterm.terminal').Terminal
-local dbee = require 'dbee'
+local sqltools = require 'mssql-tools'
+local tools_managers = sqltools.managers
+
 Create_vd_term = function(path)
   local vd = Terminal:new {
     cmd = 'visidata ' .. path,
@@ -21,24 +23,21 @@ Create_vd_term = function(path)
   vd:toggle()
 end
 
-local tmp_dir = '/var/tmp/dbee-stores/'
-local call_state = nil
-
-dbee.api.core.register_event_listener('call_state_changed', function(data)
-  if data.call.error == nil then
-    call_state = data.call.id
-  end
-end)
+local tmp_dir = '/var/tmp/mssql-results/'
 
 Open_Results_Vd = function()
-  if not dbee.is_open() or call_state == nil then
+  local buffer_manager = tools_managers.get_manager(vim.api.nvim_get_current_buf())
+  if buffer_manager.result_id == 0 or not buffer_manager.result_id then
+    vim.print 'Query results not ready'
     return
   end
   os.execute('mkdir -p ' .. tmp_dir)
-  local csv_path = tmp_dir .. tostring(call_state) .. '.csv'
-  dbee.store('csv', 'file', { extra_arg = csv_path })
-  Create_vd_term(csv_path)
+  local csv_path = tmp_dir .. buffer_manager.connection_id .. '_' .. buffer_manager.result_id .. '.csv'
+  if csv_path == buffer_manager.result_file_path then
+    Create_vd_term(csv_path)
+    return
+  end
+  sqltools.requests.save_to_csv(csv_path, Create_vd_term)
 end
 
--- vim.api.nvim_set_keymap('n', '<leader>vd', "<cmd>lua Create_vd_term('players.csv')<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>vd', '<cmd>lua Open_Results_Vd()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>mvd', '<cmd>lua Open_Results_Vd()<CR>', { noremap = true, silent = true })
